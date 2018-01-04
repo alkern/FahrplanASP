@@ -1,0 +1,32 @@
+%------------------MODELL-----------------------------------%
+
+% Linie 1
+
+% Die Fahrzeit (gerichtet) zwischen zwei benachberten Haltepunkten soll wie folgt angegeben sein:
+% elementarfahrzeit(halt1, halt2, linien_id, fahrzeit).
+%  halt1, halt2: Haltestellen
+%  linien_id: Linie und Richtung (d.h. Gegenrichtungen haben unterschiedliche linien_id)
+
+elementarfahrzeit(halt1, halt2, hin_1, 5).
+elementarfahrzeit(halt2, halt3, hin_1, 10).
+elementarfahrzeit(halt3, halt4, hin_1, 7).
+
+% symmLinie(linien_id_hin, linien_id_ruck).
+%   linien_id_hin: Richtung für die Definitionen gegeben sind
+%   linien_id_ruck: Richtung für die Definitionen gespiegelt werden sollen
+symmLinie(hin_1, ruck_1).
+
+% einstiege(halt, linien_id, tageszeit, anzahl).
+% ausstiege(halt, linien_id, tageszeit, anzahl).
+%   halt: Haltepunkt
+%   linien_id: Linie und Richtung
+%   tageszeit: Tageszeit + Wochentag
+%   anzahl: Fahrgastanzahl pro Stunde
+
+einstiege(halt1, hin_1, morgens, 50).
+einstiege(halt2, hin_1, morgens, 75).
+einstiege(halt3, hin_1, morgens, 120).
+
+ausstiege(halt2, hin_1, morgens, 20).
+ausstiege(halt3, hin_1, morgens, 100).
+ausstiege(halt4, hin_1, morgens, 125).
