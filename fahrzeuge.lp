@@ -4,4 +4,4 @@
 % strassenbahntyp(typ, sitzplatzanzahl).
 
 
-strassenbahntyp(typ1, 400).
+strassenbahntyp(typ_1, 400).
