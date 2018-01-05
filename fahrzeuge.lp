@@ -1,7 +1,7 @@
 %------------------MODELL-----------------------------------%
 
 
-% strassenbahntyp(typ, sitzplatzanzahl).
+% fahrzeugtyp(typ, sitzplatzanzahl).
 
 
-strassenbahntyp(typ_1, 400).
+fahrzeugtyp(typ_1, 400).

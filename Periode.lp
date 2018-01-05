@@ -1,0 +1,1 @@
+periode(morgens, 60).
