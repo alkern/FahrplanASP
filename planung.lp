@@ -1,11 +1,15 @@
-%------------------MODELL-----------------------------------%
+%------------------Regeln-----------------------------------%
 
 
-%Nur für Endhaltestellen!
-% anab( Linie_Ab, Linie_An,
-%       T_Ab,     T_An,
+% anab( Linie_An, Linie_Ab,
+%       T_An,     T_Ab,
 %       Zugtyp,
 %       Tageszeit).
+%    Ankunft und Abfahrt an Endhaltestelle von Linie_An == Starthaltestelle von Linie_Ab
+%    Linie_An, Linie_Ab: Linie in der die Strassenbahn ankommt, abfaehrt
+%    T_An, T_ab: Ankunfs- bzw. Abfahrtszeit
+%    Zugtyp
+%    Tageszeit
 
 
 % periode(Tageszeit, Dauer).
@@ -14,7 +18,7 @@
 
 %----------------CONSTRAINTS--------------------------------%
 
-% Jede Ankunft an der Endhaltestelle entspricht einer Abfahrt an der Starthaltestelle und umgekehrt
+% Jede Ankunft an der Endhaltestelle einer Linie entspricht der vorigen Abfahrt an der Starthaltestelle dieser Linie und umgekehrt
 
 :- anab(Linie, _,
         T_Ab, _,
@@ -38,7 +42,7 @@
    periode(Tageszeit, Periode),
    fahrzeit(Linie, Fahrzeit).
 
-% Es durfen nicht mehr Fahrzeuge als vorhanden eingesetzt werden
+% Je Zugtyp durfen nicht mehr Fahrzeuge als vorhanden eingesetzt werden
 
 :- #sum{ Fahrzeit + ((T_Ab - T_An) \ Periode)
            : fahrzeit(Linie_Ab, Fahrzeit), anab(Linie_Ab, Linie_An, T_Ab, T_An, Zugtyp, Tageszeit) 

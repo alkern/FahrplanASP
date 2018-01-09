@@ -1,0 +1,9 @@
+Projekt Strassenbahnfahrplan
+
+instance/		enth. Beispiel
+modellierung.lp		Modellierung
+planung.lp		Planung bzw. Symmulation
+
+Test mit
+
+$ clingo instance01/instance.lp
