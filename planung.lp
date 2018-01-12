@@ -50,11 +50,11 @@
 %anab(hin_1, ruck_1, 0,0, typ_1, morgens).
 
 % naechster zug der Linie faehrt an haltestelle in delta_t ab
-abfahrt_nach(LINIE_AB, T_AB_PREV, DELTA_T, ZUGTYP_NEXT, TAGESZEIT)
+abfahrt_nach(LINIE_AB, T_AB_PREV, T_AB_NEXT, ZUGTYP_NEXT, TAGESZEIT)
   :- periode(TAGESZEIT, PERIODE),
      anab(_, LINIE_AB, _, T_AB_PREV, _, TAGESZEIT),
-     anab(_, LINIE_AB, _, (T_AB_PREV + DELTA_T) \ PERIODE, ZUGTYP_NEXT, TAGESZEIT),
-     DELTA_T = #min{ (T_AB_N - T_AB_PREV) \ PERIODE : anab(_, LINIE_AB, _, T_AB_N, _, TAGESZEIT) }.
+     anab(_, LINIE_AB, _, T_AB_NEXT, ZUGTYP_NEXT, TAGESZEIT),
+     (T_AB_NEXT - T_AB_PREV) \ PERIODE = #min{ (T_AB_N - T_AB_PREV) \ PERIODE : anab(_, LINIE_AB, _, T_AB_N, _, TAGESZEIT) }.
 
 % Je Zugtyp durfen nicht mehr Fahrzeuge als vorhanden eingesetzt werden
 :- #sum{ Fahrzeit + ((T_Ab - T_An) \ Periode)
@@ -84,8 +84,8 @@ passagiere_linienrichtung(LINIEN_ID, TAGESZEIT, ANZAHL)
     :- ANZAHL = #max { ANZ : passagiere_nach_halt(LINIEN_, HALT, TAGESZEIT, ANZ) }, passagiere_nach_halt(LINIEN_ID, _, TAGESZEIT, _).
 
 % die naechste ankommende Bahn, muss grosz genug sein, um die Passagiere aufnehmen zu koennen, die sich in der zwischenzeit angesammelt haben
-:- abfahrt_nach(LINIE_AB, T_AB_PREV, DELTA_T, ZUGTYP_NEXT, TAGESZEIT),
+:- abfahrt_nach(LINIE_AB, T_AB_PREV, T_AB_NEXT, ZUGTYP_NEXT, TAGESZEIT),
    fahrzeugtyp(ZUGTYP_NEXT, PLATZ),
-   PLATZ < ANZAHL_PRO_STUNDE / 60 * DELTA_T,
+   PLATZ < ANZAHL_PRO_STUNDE / 60 * ((T_AB_NEXT - T_AB_PREV) \ PERIODE),
    periode(TAGESZEIT, PERIODE),
    passagiere_linienrichtung(LINIEN_ID, TAGESZEIT, ANZAHL_PRO_STUNDE).
