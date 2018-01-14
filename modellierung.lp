@@ -1,5 +1,4 @@
 %------------------MODELL-----------------------------------%
-
 % elementarfahrzeit( halt1, halt2, linien_id, fahrzeit ).
 %   gibt die FAHRZEIT (gerichtet) zwischen zwei benachbarten HALTepunkten an
 %   halt1, halt2: HALTestellen
@@ -19,7 +18,6 @@
 
 
 %------------------REGELN-----------------------------------%
-
 % linienfahrzeit: Die FAHRZEIT auf einer Linie
 linienfahrzeit(HALT1, HALT2, LINIEN_ID, FAHRZEIT)
     :- elementarfahrzeit(HALT1, HALT2, LINIEN_ID, FAHRZEIT).
@@ -34,7 +32,7 @@ fahrzeit(LINIEN_ID, FAHRZEIT)
        starthalt(LINIEN_ID, HALT1),
        endhalt(LINIEN_ID, HALT2).
 
-% Der erste HALTepunkt einer Linie
+% Der erste Haltepunkt einer Linie
 starthalt(LINIEN_ID, HALT)
     :- elementarfahrzeit(HALT, _, LINIEN_ID, _),
        not elementarfahrzeit(_, HALT, LINIEN_ID, _).
@@ -60,8 +58,6 @@ ausstiege(HALT, LINIE_RUCK, TAGESZEIT, ANZAHL)
 
 
 %----------------CONSTRAINTS--------------------------------%
-
-
 % Linien durfen sich nicht verzweigen
 
 :- elementarfahrzeit(HALT1, HALT2, LINIE, _),
@@ -71,10 +67,7 @@ ausstiege(HALT, LINIE_RUCK, TAGESZEIT, ANZAHL)
    elementarfahrzeit(HALT3, HALT1, LINIE, _),
    HALT2 != HALT3.
 
-% FAHRZEIT muss eindeutig sein
+% Fahrzeit muss eindeutig sein
 :- elementarfahrzeit(HALT1, _, LINIE, FAHRZEIT1),
    elementarfahrzeit(HALT1, _, LINIE, FAHRZEIT2),
    FAHRZEIT1 != FAHRZEIT2.
-
-%#show ankunft/3.
-%#show abfahrt/3.
