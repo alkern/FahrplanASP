@@ -1,13 +1,13 @@
 %------------------MODELL-----------------------------------%
 
 % elementarfahrzeit( halt1, halt2, linien_id, fahrzeit ).
-%   gibt die Fahrzeit (gerichtet) zwischen zwei benachbarten Haltepunkten an
-%   halt1, halt2: Haltestellen
+%   gibt die FAHRZEIT (gerichtet) zwischen zwei benachbarten HALTepunkten an
+%   halt1, halt2: HALTestellen
 %   linien_id: Linie und Richtung (d.h. Gegenrichtungen haben unterschiedliche linien_id)
 
 % einstiege(halt, linien_id, tageszeit, anzahl).
 % ausstiege(halt, linien_id, tageszeit, anzahl).
-%   halt: Haltepunkt
+%   halt: HALTepunkt
 %   linien_id: Linie und Richtung
 %   tageszeit: Tageszeit + Wochentag
 %   anzahl: Fahrgastanzahl pro Stunde
@@ -20,29 +20,29 @@
 
 %------------------REGELN-----------------------------------%
 
-% linienfahrzeit: Die Fahrzeit auf einer Linie
-linienfahrzeit(Halt1, Halt2, Linien_id, Fahrzeit)
-    :- elementarfahrzeit(Halt1, Halt2, Linien_id, Fahrzeit).
+% linienfahrzeit: Die FAHRZEIT auf einer Linie
+linienfahrzeit(HALT1, HALT2, LINIEN_ID, FAHRZEIT)
+    :- elementarfahrzeit(HALT1, HALT2, LINIEN_ID, FAHRZEIT).
 
-linienfahrzeit(Halt1, Halt3, Linien_id, Fahrzeit1 + Fahrzeit2)
-    :- elementarfahrzeit(Halt1, Halt2, Linien_id, Fahrzeit1),
-       linienfahrzeit(Halt2, Halt3, Linien_id, Fahrzeit2).
+linienfahrzeit(HALT1, HALT3, LINIEN_ID, FAHRZEIT1 + FAHRZEIT2)
+    :- elementarfahrzeit(HALT1, HALT2, LINIEN_ID, FAHRZEIT1),
+       linienfahrzeit(HALT2, HALT3, LINIEN_ID, FAHRZEIT2).
 
 % Die Geseamtfahrzeit einer Linie
-fahrzeit(Linien_id, Fahrzeit)
-    :- linienfahrzeit(Halt1, Halt2, Linien_id, Fahrzeit),
-       starthalt(Linien_id, Halt1),
-       endhalt(Linien_id, Halt2).
+fahrzeit(LINIEN_ID, FAHRZEIT)
+    :- linienfahrzeit(HALT1, HALT2, LINIEN_ID, FAHRZEIT),
+       starthalt(LINIEN_ID, HALT1),
+       endhalt(LINIEN_ID, HALT2).
 
-% Der erste Haltepunkt einer Linie
-starthalt(Linien_id, Halt)
-    :- elementarfahrzeit(Halt, _, Linien_id, _),
-       not elementarfahrzeit(_, Halt, Linien_id, _).
+% Der erste HALTepunkt einer Linie
+starthalt(LINIEN_ID, HALT)
+    :- elementarfahrzeit(HALT, _, LINIEN_ID, _),
+       not elementarfahrzeit(_, HALT, LINIEN_ID, _).
 
-% Der letzte Haltepunkt einer Linie
-endhalt(Linien_id, Halt)
-    :- not elementarfahrzeit(Halt, _, Linien_id, _),
-       elementarfahrzeit(_, Halt, Linien_id, _).
+% Der letzte HALTepunkt einer Linie
+endhalt(LINIEN_ID, HALT)
+    :- not elementarfahrzeit(HALT, _, LINIEN_ID, _),
+       elementarfahrzeit(_, HALT, LINIEN_ID, _).
 
 % Regeln fur symmetrische Linien
 
@@ -71,7 +71,7 @@ ausstiege(HALT, LINIE_RUCK, TAGESZEIT, ANZAHL)
    elementarfahrzeit(HALT3, HALT1, LINIE, _),
    HALT2 != HALT3.
 
-% Fahrzeit muss eindeutig sein
+% FAHRZEIT muss eindeutig sein
 :- elementarfahrzeit(HALT1, _, LINIE, FAHRZEIT1),
    elementarfahrzeit(HALT1, _, LINIE, FAHRZEIT2),
    FAHRZEIT1 != FAHRZEIT2.

@@ -1,18 +1,18 @@
 %------------------Regeln-----------------------------------%
 
 
-% anab( Linie_An, Linie_Ab,
-%       T_An,     T_Ab,
-%       Zugtyp,
-%       Tageszeit).
-%    Ankunft und Abfahrt an Endhaltestelle von Linie_An == Starthaltestelle von Linie_Ab
-%    Linie_An, Linie_Ab: Linie in der die Strassenbahn ankommt, abfaehrt
-%    T_An, T_ab: Ankunfs- bzw. Abfahrtszeit
-%    Zugtyp
-%    Tageszeit
+% anab( LINIE_AN, LINIE_AB,
+%       T_AN,     T_AB,
+%       ZUGTYP,
+%       TAGESZEIT).
+%    Ankunft und Abfahrt an Endhaltestelle von LINIE_AN == Starthaltestelle von LINIE_AB
+%    LINIE_AN, LINIE_AB: LINIE in der die Strassenbahn ankommt, abfaehrt
+%    T_AN, T_ab: Ankunfs- bzw. Abfahrtszeit
+%    ZUGTYP
+%    TAGESZEIT
 
 
-% periode(Tageszeit, Dauer).
+% periode(TAGESZEIT, Dauer).
 
 % erstellung moeglicher abfahrten an starthaltestellen
 { anab(LINIE_AN, LINIE_AB, T_AN, T_AB, ZUGTYP, TAGESZEIT) : T_AN = 0 .. PERIODE-1, T_AB = 0..PERIODE-1 } ANZAHL_FAHRZEUGE
@@ -23,48 +23,48 @@
 
 %----------------CONSTRAINTS--------------------------------%
 
-% Jede Ankunft an der Endhaltestelle einer Linie entspricht der vorigen Abfahrt an der Starthaltestelle dieser Linie und umgekehrt
+% Jede Ankunft an der Endhaltestelle einer LINIE entspricht der vorigen Abfahrt an der Starthaltestelle dieser LINIE und umgekehrt
 
-:- anab(Linie, _,
-        T_Ab, _,
-        Zugtyp,
-        Tageszeit),
-   not anab(_, Linie,
-	    _,   (T_Ab + Fahrzeit) \ Periode,
-	    Zugtyp,
-	    Tageszeit),
-   periode(Tageszeit, Periode),
-   fahrzeit(Linie, Fahrzeit).
+:- anab(LINIE, _,
+        T_AB, _,
+        ZUGTYP,
+        TAGESZEIT),
+   not anab(_, LINIE,
+	    _,   (T_AB + FAHRZEIT) \ PERIODE,
+	    ZUGTYP,
+	    TAGESZEIT),
+   periode(TAGESZEIT, PERIODE),
+   fahrzeit(LINIE, FAHRZEIT).
 
-:- not anab(Linie, _,
-            (T_An - Fahrzeit) \ Periode, _,
-            Zugtyp,
-            Tageszeit),
-   anab(_, Linie,
-	_,  T_An,
-	Zugtyp,
-	Tageszeit),
-   periode(Tageszeit, Periode),
-   fahrzeit(Linie, Fahrzeit).
+:- not anab(LINIE, _,
+            (T_AN - FAHRZEIT) \ PERIODE, _,
+            ZUGTYP,
+            TAGESZEIT),
+   anab(_, LINIE,
+	_,  T_AN,
+	ZUGTYP,
+	TAGESZEIT),
+   periode(TAGESZEIT, PERIODE),
+   fahrzeit(LINIE, FAHRZEIT).
 
 %anab(hin_1, ruck_1, 0,0, typ_1, morgens).
 
-% naechster zug der Linie faehrt an haltestelle in delta_t ab
+% naechster zug der LINIE faehrt an haltestelle in delta_t ab
 abfahrt_nach(LINIE_AB, T_AB_PREV, T_AB_NEXT, ZUGTYP_NEXT, TAGESZEIT)
   :- periode(TAGESZEIT, PERIODE),
      anab(_, LINIE_AB, _, T_AB_PREV, _, TAGESZEIT),
      anab(_, LINIE_AB, _, T_AB_NEXT, ZUGTYP_NEXT, TAGESZEIT),
      (T_AB_NEXT - T_AB_PREV) \ PERIODE = #min{ (T_AB_N - T_AB_PREV) \ PERIODE : anab(_, LINIE_AB, _, T_AB_N, _, TAGESZEIT) }.
 
-% Je Zugtyp durfen nicht mehr Fahrzeuge als vorhanden eingesetzt werden
-:- #sum{ Fahrzeit + ((T_Ab - T_An) \ Periode)
-           : fahrzeit(Linie_Ab, Fahrzeit), anab(Linie_Ab, Linie_An, T_Ab, T_An, Zugtyp, Tageszeit) 
-       } > Periode * Fahrzeuganzahl,
-   periode(Tageszeit, Periode),
-   fahrzeugtyp(Zugtyp, Fahrzeuganzahl).
+% Je ZUGTYP durfen nicht mehr Fahrzeuge als vorhanden eingesetzt werden
+:- #sum{ FAHRZEIT + ((T_AB - T_AN) \ PERIODE)
+           : fahrzeit(LINIE_AB, FAHRZEIT), anab(LINIE_AB, LINIE_AN, T_AB, T_AN, ZUGTYP, TAGESZEIT) 
+       } > PERIODE * FAHRZEUGANZAHL,
+   periode(TAGESZEIT, PERIODE),
+   fahrzeugtyp(ZUGTYP, FAHRZEUGANZAHL).
 
 % passagiere_nach_halt(linien_id, halt, anzahl_passagiere).
-%   linien_id: Linie und Richtigung
+%   linien_id: LINIE und Richtigung
 %   halt: Haltestelle
 %   anzahl_passagie: Anzahl der Passagiere nach der Abfahrt von Haltepunkt (zwischen den Haltepunkten) pro Stunde
 
@@ -78,12 +78,12 @@ passagiere_nach_halt(LINIEN_ID, HALT, TAGESZEIT, ANZ_PREV + EINST - AUSST)
        elementarfahrzeit(HALT_PREV, HALT, LINIEN_ID, _).
 
 % passagie_linienrichtung(linien_id, anzahl).
-%   linien_id: Linie und Richtung
+%   linien_id: LINIE und Richtung
 %   anzahl: Anzahl der Passiegiere pro Stunde, die auf dem Streckenabschnitt mit maximaler Auslastung zwischen zwei Haltepunkten transportiert werden mussen
 passagiere_linienrichtung(LINIEN_ID, TAGESZEIT, ANZAHL)
     :- ANZAHL = #max { ANZ : passagiere_nach_halt(LINIEN_, HALT, TAGESZEIT, ANZ) }, passagiere_nach_halt(LINIEN_ID, _, TAGESZEIT, _).
 
-% die naechste ankommende Bahn, muss grosz genug sein, um die Passagiere aufnehmen zu koennen, die sich in der zwischenzeit angesammelt haben
+% die naechste ankommende Bahn, muss gross genug sein, um die Passagiere aufnehmen zu koennen, die sich in der zwischenzeit angesammelt haben
 :- abfahrt_nach(LINIE_AB, T_AB_PREV, T_AB_NEXT, ZUGTYP_NEXT, TAGESZEIT),
    fahrzeugtyp(ZUGTYP_NEXT, PLATZ),
    PLATZ < ANZAHL_PRO_STUNDE / 60 * ((T_AB_NEXT - T_AB_PREV) \ PERIODE),
