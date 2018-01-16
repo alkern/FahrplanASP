@@ -74,6 +74,21 @@ max_passagiere_linienrichtung(LINIEN_ID, TAGESZEIT, ANZAHL)
     :- ANZAHL = #max { ANZ : passagiere_nach_halt(LINIEN_ID, HALT, TAGESZEIT, ANZ) },
        passagiere_nach_halt(LINIEN_ID, _, TAGESZEIT, ANZAHL).
 
+% Abfahrt an beliebieger Station
+abfahrt(LINIE, HALT, T_AB, TAGESZEIT)
+  :- anab( _, LINIE, _, T_AB, _, TAGESZEIT),
+     starthalt(LINIE, HALT).
+
+ankunft(LINIE, HALT_N, T_AN, TAGESZEIT)
+  :- abfahrt(LINIE, HALT_P, T_AB, TAGESZEIT),
+     elementarfahrzeit(HALT_P, HALT_N, LINIE, DELTA_T),
+     delta_mod_periode(T_AN, T_AB, DELTA_T, TAGESZEIT).
+
+abfahrt(LINIE, HALT, T, TAGESZEIT)
+  :- ankunft(LINIE, HALT, T, TAGESZEIT),
+     not endhalt(LINIE, HALT).
+
+
 %----------------CONSTRAINTS--------------------------------%
 % Jede Ankunft an der Endhaltestelle einer linie entspricht der vorigen Abfahrt an der Starthaltestelle dieser LINIE und umgekehrt
 :- anab(LINIE, _, T_AB, _, ZUGTYP, TAGESZEIT),
