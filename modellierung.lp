@@ -18,6 +18,10 @@
 
 
 %------------------REGELN-----------------------------------%
+% linie
+%   LINIEN_ID: Linienrichtung
+linie(LINIEN_ID) :- elementarfahrzeit(_, _, LINIEN_ID, _).
+
 % linienfahrzeit: Die FAHRZEIT auf einer Linie
 linienfahrzeit(HALT1, HALT2, LINIEN_ID, FAHRZEIT)
     :- elementarfahrzeit(HALT1, HALT2, LINIEN_ID, FAHRZEIT).
