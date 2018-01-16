@@ -3,7 +3,8 @@ Projekt Strassenbahnfahrplan
 instance/		enth. Beispiel
 modellierung.lp		Modellierung
 planung.lp		Planung bzw. Simulation
+optimierung.lp		Optimierung
 
 Test mit
 
-$ clingo instance01/instance.lp
+$ clingo instance01/instance.lp einfache_ausgabe.lp | sed "s|) |)\n|g"
