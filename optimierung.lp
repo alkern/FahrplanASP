@@ -67,5 +67,5 @@ umstieg_an_not_opt(LINIE_AN, LINIE_AB, TAGESZEIT)
 :~ umstieg_an_not_opt(LINIE_AN, LINIE_AB, TAGESZEIT),
    umstieg_ab_not_opt(LINIE_AN, LINIE_AB, TAGESZEIT). [1@2]
 
-% Anzahl der Fahrzeuge soll mit niedriger Preferenz minimert
+% Anzahl der Fahrzeuge soll mit niedrigerer Preferenz minimert werden
 :~ fahrzeuge_benotigt(TYP, ANZAHL, TAGESZEIT). [ANZAHL@1]

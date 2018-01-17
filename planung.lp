@@ -128,7 +128,9 @@ fahrzeuge_benotigt(ZUGTYP, FAHRZEUGMIN / PERIODE, TAGESZEIT)
    fahrzeuganzahl(ZUGTYP, FAHRZEUGANZAHL, TAGESZEIT),
    fahrzeuge_benotigt(ZUGTYP, BEN_ANZAHL, TAGESZEIT).
 
-% die naechste ankommende Bahn, muss gross genug sein, um die Passagiere
+% Bahnen mussen gross genug sein, um alle wartenden Passagiere
+% an jeder Haltesteller einer Linie mitzunehmen:
+% D.h. die naechste ankommende Bahn, muss gross genug sein, um die Passagiere
 % aufnehmen zu koennen, die sich in der zwischenzeit angesammelt haben
 :- abfahrt_nach(LINIE, _, _, DELTA_T, ZUGTYP_NEXT, TAGESZEIT),
    fahrzeugtyp(ZUGTYP_NEXT, PLATZ),
