@@ -1,16 +1,14 @@
-# Projekt Strassenbahnfahrplan
+# Projekt Straßenbahnfahrplan
 
 Projekt für das Praktikum Wissensrepräsentation
 
 ## Struktur
 
-instance/		enth. Beispiel
-modellierung.lp		Modellierung
-planung.lp		Planung bzw. Simulation
-optimierung.lp		Optimierung
-
-einfache_ausgabe.lp	Generierung einer lesbaren Ausgabe
-informative_ausgabe.lp
+* `instance/`          enth. Beispiel
+* `modellierung.lp`    Modellierung
+* `planung.lp`         Planung bzw. Simulation
+* `optimierung.lp`     Optimierung
+* `_ausgabe.lp`        lesbares Ausgabeformat
 
 Test mit
 
