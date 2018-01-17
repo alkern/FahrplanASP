@@ -87,22 +87,22 @@ abfahrt(LINIE, HALT, T, TAGESZEIT)
 %----------------CONSTRAINTS--------------------------------%
 % Jede Ankunft an der Endhaltestelle einer linie entspricht der
 % vorigen Abfahrt an der Starthaltestelle dieser LINIE und umgekehrt
-:- anab(LINIE, _, T_AB, _, ZUGTYP, TAGESZEIT),
-   not anab(_, LINIE, _, (((T_AB + FAHRZEIT)\PER)+PER)\PER, ZUGTYP, TAGESZEIT),
+:- anab(_, LINIE, _, T_AB, ZUGTYP, TAGESZEIT),
+   not anab(LINIE, _, (((T_AB + FAHRZEIT)\PER)+PER)\PER, _, ZUGTYP, TAGESZEIT),
    periode(TAGESZEIT, PER),
    fahrzeit(LINIE, FAHRZEIT).
 
-:- not anab(LINIE, _, (((T_AN - FAHRZEIT)\PER)+PER)\PER, _, ZUGTYP, TAGESZEIT),
-   anab(_, LINIE, _,  T_AN, ZUGTYP, TAGESZEIT),
+:- not anab(_, LINIE, _, (((T_AN - FAHRZEIT)\PER)+PER)\PER, ZUGTYP, TAGESZEIT),
+   anab(LINIE, _,  T_AN, _, ZUGTYP, TAGESZEIT),
    periode(TAGESZEIT, PER),
    fahrzeit(LINIE, FAHRZEIT).
 
 % Keine zeitgleichen Abfahrten
-:- anab(LINIE_AB, _, T_AB, T_AN_1, _, TAGESZEIT),
-   anab(LINIE_AB, _, T_AB, T_AN_2, _, TAGESZEIT),
+:- anab(_, LINIE_AB, T_AN_1, T_AB, _, TAGESZEIT),
+   anab(_, LINIE_AB, T_AN_2, T_AB, _, TAGESZEIT),
    T_AN_1 != T_AN_2.
-:- anab(LINIE_AB, _, T_AB, _, ZUGTYP_1, TAGESZEIT),
-   anab(LINIE_AB, _, T_AB, _, ZUGTYP_2, TAGESZEIT),
+:- anab(_, LINIE_AB, _, T_AB, ZUGTYP_1, TAGESZEIT),
+   anab(_, LINIE_AB, _, T_AB, ZUGTYP_2, TAGESZEIT),
    ZUGTYP_1 != ZUGTYP_2.
 
 % Je Zugtyp durfen nicht mehr Fahrzeuge als vorhanden eingesetzt werden
@@ -114,7 +114,7 @@ fahrzeugminuten_benotigt(ZUGTYP, FAHRZEUGMIN, TAGESZEIT)
   :- FAHRZEUGMIN =
         #sum{ FAHRZEIT + (PERIODE + T_AB - T_AN)\PERIODE, LINIE_AB, T_AB
            : fahrzeit(LINIE_AB, FAHRZEIT),
-	     anab(LINIE_AB, LINIE_AN, T_AB, T_AN, ZUGTYP, TAGESZEIT),
+	     anab(LINIE_AN, LINIE_AB, T_AN, T_AB, ZUGTYP, TAGESZEIT),
              periode(TAGESZEIT, PERIODE)
         },
      fahrzeugtyp(ZUGTYP, _),
@@ -125,7 +125,7 @@ fahrzeuge_benotigt(ZUGTYP, FAHRZEUGMIN / PERIODE, TAGESZEIT)
      periode(TAGESZEIT, PERIODE).
 
 :- BEN_ANZAHL > FAHRZEUGANZAHL,
-   fahrzeugtyp(ZUGTYP, FAHRZEUGANZAHL),
+   fahrzeuganzahl(ZUGTYP, FAHRZEUGANZAHL, TAGESZEIT),
    fahrzeuge_benotigt(ZUGTYP, BEN_ANZAHL, TAGESZEIT).
 
 % die naechste ankommende Bahn, muss gross genug sein, um die Passagiere

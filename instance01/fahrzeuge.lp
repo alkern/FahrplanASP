@@ -8,4 +8,4 @@ fahrzeugtyp(typ_1, 400).
 
 % fahrzeuganzahl(typ, anzahl_fahrzeuge, tageszeit).
 
-fahrzeuganzahl(typ_1, 7, morgens).
+fahrzeuganzahl(typ_1, 20, morgens).
