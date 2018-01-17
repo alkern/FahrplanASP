@@ -41,7 +41,8 @@ umstieg_ab_not_opt(LINIE_AN, LINIE_AB, TAGESZEIT)
   :- umsteigebeziehung(LINIE_AN, LINIE_AB),
      abfahrt(LINIE_AB, HALT, T_AB, TAGESZEIT),
      not ankunft(LINIE_AN, HALT, T_AN, TAGESZEIT),
-     delta_mod_periode(T_AB, T_AN, UMSTIEGS_T, TAGESZEIT),
+     T_AN = (PER + T_AB - UMSTIEGS_T) \ PER,
+     periode(TAGESZEIT, PER),
      optimale_umstiegszeit_min(MIN),
      optimale_umstiegszeit_max(MAX),
      UMSTIEGS_T = MIN .. MAX.
@@ -52,13 +53,19 @@ umstieg_an_not_opt(LINIE_AN, LINIE_AB, TAGESZEIT)
   :- umsteigebeziehung(LINIE_AN, LINIE_AB),
      ankunft(LINIE_AN, HALT, T_AN, TAGESZEIT),
      not abfahrt(LINIE_AB, HALT, T_AB, TAGESZEIT),
-     delta_mod_periode(T_AB, T_AN, UMSTIEGS_T, TAGESZEIT),
+     T_AB = (T_AN + UMSTIEGS_T) \ PER,
+     periode(TAGESZEIT, PER),
      optimale_umstiegszeit_min(MIN),
      optimale_umstiegszeit_max(MAX),
      UMSTIEGS_T = MIN .. MAX.
+
+%-------------------------Preferences--------------%
 
 % Wenn die umstiegsbeziehung weder bez. abfahrender noch ankommender
 % Bahnen optimal ist, dann ist die umstiegsbeziehung nicht optimal.
 % Mit einem Weak constraint wird uber alle umstiegsbeziehungen optimiert.
 :~ umstieg_an_not_opt(LINIE_AN, LINIE_AB, TAGESZEIT),
-   umstieg_ab_not_opt(LINIE_AN, LINIE_AB, TAGESZEIT). [1@1]
+   umstieg_ab_not_opt(LINIE_AN, LINIE_AB, TAGESZEIT). [1@2]
+
+% Anzahl der Fahrzeuge soll mit niedriger Preferenz minimert
+:~ fahrzeuge_benotigt(TYP, ANZAHL, TAGESZEIT). [ANZAHL@1]
